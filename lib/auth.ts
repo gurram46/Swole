@@ -13,6 +13,7 @@ export interface SessionPayload {
   gym_id: string;
   email: string;
   role: string;
+  [key: string]: unknown;
 }
 
 export async function signToken(payload: SessionPayload): Promise<string> {
