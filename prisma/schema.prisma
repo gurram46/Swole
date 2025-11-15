@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Gym {
+  id           String       @id @default(uuid())
+  name         String
+  slug         String       @unique
+  owner_name   String
+  owner_email  String
+  owner_phone  String
+  created_at   DateTime     @default(now())
+
+  admins       AdminUser[]
+  members      Member[]
+  attendance   Attendance[]
+}
+
+model AdminUser {
+  id          String    @id @default(uuid())
+  gym_id      String
+  gym         Gym       @relation(fields: [gym_id], references: [id])
+  email       String    @unique
+  otp_code    String?
+  otp_expires DateTime?
+  role        Role      @default(owner)
+  created_at  DateTime  @default(now())
+
+  @@index([gym_id])
+}
+
+enum Role {
+  owner
+  staff
+}
+
+model Member {
+  id               String       @id @default(uuid())
+  gym_id           String
+  gym              Gym          @relation(fields: [gym_id], references: [id])
+  name             String
+  phone            String
+  membership_start DateTime
+  membership_end   DateTime
+  qr_code          String       @unique
+  is_active        Boolean      @default(true)
+  created_at       DateTime     @default(now())
+
+  attendance       Attendance[]
+
+  @@index([gym_id])
+  @@index([membership_end])
+  @@index([qr_code])
+}
+
+model Attendance {
+  id             String    @id @default(uuid())
+  gym_id         String
+  gym            Gym       @relation(fields: [gym_id], references: [id])
+  member_id      String
+  member         Member    @relation(fields: [member_id], references: [id])
+  check_in_time  DateTime  @default(now())
+  check_out_time DateTime?
+  created_at     DateTime  @default(now())
+
+  @@index([gym_id])
+  @@index([member_id])
+  @@index([check_in_time])
+}
+
+model ReminderLog {
+  id         String   @id @default(uuid())
+  run_at     DateTime @default(now())
+  manual     Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  @@index([run_at])
+}
