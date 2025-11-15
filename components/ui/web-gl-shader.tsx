@@ -46,6 +46,7 @@ export function WebGLShader() {
 
     // Compile shader
     function compileShader(source: string, type: number) {
+      if (!gl) return null;
       const shader = gl.createShader(type);
       if (!shader) return null;
       gl.shaderSource(shader, source);
