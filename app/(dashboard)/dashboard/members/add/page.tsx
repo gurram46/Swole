@@ -24,9 +24,7 @@ const memberSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().regex(/^\d{10}$/, 'Phone must be exactly 10 digits'),
   membership_start: z.string().min(1, 'Start date is required'),
-  membership_duration: z.enum(['1', '3', '6', '12'], {
-    required_error: 'Please select a duration',
-  }),
+  membership_duration: z.enum(['1', '3', '6', '12']),
   notes: z.string().optional(),
 });
 
