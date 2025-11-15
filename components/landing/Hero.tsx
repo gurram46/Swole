@@ -1,16 +1,12 @@
 'use client';
 
-import { WebGLShader } from '@/components/ui/web-gl-shader';
 import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section className="relative w-full h-[85vh] flex items-center justify-center md:justify-start overflow-hidden">
-      {/* Animated WebGL Background */}
-      <WebGLShader />
-
+    <section className="relative w-full h-[85vh] flex items-center justify-center md:justify-start overflow-hidden bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20">
       {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
       {/* Gradient fade at bottom */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-black/50" />
