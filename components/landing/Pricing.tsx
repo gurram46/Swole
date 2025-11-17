@@ -82,20 +82,20 @@ const pricingTiers = [
 
 export function Pricing() {
   return (
-    <section className="py-20 px-6 md:px-12 lg:px-16 bg-background" aria-labelledby="pricing-heading">
+    <section className="py-12 md:py-20 px-4 sm:px-6 md:px-12 lg:px-16 bg-background" aria-labelledby="pricing-heading">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 id="pricing-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        <div className="text-center mb-10 md:mb-16">
+          <h2 id="pricing-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-4">
             No hidden fees. No long-term contracts.
           </p>
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8 mb-6 md:mb-8">
           {pricingTiers.map((tier) => {
             const Icon = tier.icon;
             return (
@@ -113,29 +113,29 @@ export function Pricing() {
                   </Badge>
                 )}
 
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4" aria-hidden="true">
-                    <Icon className="w-6 h-6 text-primary" />
+                <CardHeader className="pb-4 md:pb-6">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 md:mb-4" aria-hidden="true">
+                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
-                  <CardTitle className="text-2xl" role="heading" aria-level={3}>
+                  <CardTitle className="text-xl md:text-2xl" role="heading" aria-level={3}>
                     {tier.name}
                   </CardTitle>
-                  <CardDescription>{tier.description}</CardDescription>
+                  <CardDescription className="text-sm md:text-base">{tier.description}</CardDescription>
                 </CardHeader>
 
-                <CardContent className="flex-grow">
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold">{tier.price}</span>
+                <CardContent className="flex-grow pb-4 md:pb-6">
+                  <div className="mb-4 md:mb-6">
+                    <span className="text-3xl md:text-4xl font-bold">{tier.price}</span>
                     {tier.period && (
-                      <span className="text-muted-foreground">{tier.period}</span>
+                      <span className="text-sm md:text-base text-muted-foreground">{tier.period}</span>
                     )}
                   </div>
 
-                  <ul className="space-y-3">
+                  <ul className="space-y-2 md:space-y-3">
                     {tier.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2">
-                        <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground">
+                        <Check className="w-4 h-4 md:w-5 md:h-5 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-xs md:text-sm text-muted-foreground">
                           {feature}
                         </span>
                       </li>
@@ -143,11 +143,11 @@ export function Pricing() {
                   </ul>
                 </CardContent>
 
-                <CardFooter>
+                <CardFooter className="pt-0">
                   {tier.name === 'Enterprise' ? (
                     <a href="mailto:contact@quantumworks.services" className="w-full">
                       <Button
-                        className="w-full"
+                        className="w-full touch-manipulation"
                         variant={tier.highlighted ? 'default' : 'outline'}
                       >
                         {tier.cta}
@@ -156,7 +156,7 @@ export function Pricing() {
                   ) : (
                     <Link href="/signup" className="w-full">
                       <Button
-                        className="w-full"
+                        className="w-full touch-manipulation"
                         variant={tier.highlighted ? 'default' : 'outline'}
                       >
                         {tier.cta}

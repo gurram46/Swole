@@ -23,14 +23,14 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 px-6 md:px-12 lg:px-16 bg-muted/30" aria-labelledby="how-it-works-heading">
+    <section id="how-it-works" className="py-12 md:py-20 px-4 sm:px-6 md:px-12 lg:px-16 bg-muted/30" aria-labelledby="how-it-works-heading">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 id="how-it-works-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        <div className="text-center mb-10 md:mb-16">
+          <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4">
             How Swole Works
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-4">
             Get your gym digital in minutes — not days.
           </p>
         </div>
@@ -38,40 +38,40 @@ export function HowItWorks() {
         {/* Steps */}
         <div className="relative">
           {/* Mobile: Vertical timeline line */}
-          <div className="md:hidden absolute left-8 top-0 h-full w-[2px] bg-primary/20" />
+          <div className="md:hidden absolute left-6 sm:left-8 top-0 h-full w-[2px] bg-primary/20" />
 
           {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8">
             {steps.map((step) => {
               const Icon = step.icon;
               return (
                 <div
                   key={step.step}
-                  className="relative flex md:flex-col items-start md:items-center text-left md:text-center group hover:scale-105 transition-all duration-300"
+                  className="relative flex md:flex-col items-start md:items-center text-left md:text-center group hover:scale-105 transition-all duration-300 touch-manipulation"
                 >
                   {/* Step Number Badge (Mobile) */}
-                  <div className="md:hidden absolute -left-1 top-0 w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center text-sm font-bold text-primary z-10">
+                  <div className="md:hidden absolute -left-1 top-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center text-xs sm:text-sm font-bold text-primary z-10">
                     {step.step}
                   </div>
 
                   {/* Icon Circle */}
-                  <div className="ml-12 md:ml-0 mb-0 md:mb-6 flex-shrink-0">
-                    <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300" aria-hidden="true">
-                      <Icon className="w-10 h-10 text-primary" />
+                  <div className="ml-10 sm:ml-12 md:ml-0 mb-0 md:mb-6 flex-shrink-0">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300" aria-hidden="true">
+                      <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="ml-6 md:ml-0">
+                  <div className="ml-4 sm:ml-6 md:ml-0 pr-4 md:pr-0">
                     {/* Step Number (Desktop) */}
                     <div className="hidden md:block text-sm font-bold text-primary mb-2" aria-label={`Step ${step.step}`}>
                       Step {step.step}
                     </div>
 
-                    <h3 className="text-xl font-semibold mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       {step.description}
                     </p>
                   </div>

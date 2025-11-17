@@ -36,37 +36,40 @@ const features = [
 
 export function Features() {
   return (
-    <section className="py-20 px-6 md:px-12 lg:px-16 bg-background" aria-labelledby="features-heading">
+    <section className="py-12 md:py-20 px-4 sm:px-6 md:px-12 lg:px-16 bg-background" aria-labelledby="features-heading">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 id="features-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        <div className="text-center mb-10 md:mb-16">
+          <h2 id="features-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 md:mb-4">
             Everything Your Gym Needs
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Simple tools that help you manage members, attendance, renewals, and operations — without the headache.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
               <Card
                 key={feature.title}
-                className="hover:scale-[1.02] transition-all duration-200"
+                className="group hover:scale-[1.02] hover:shadow-xl hover:border-primary/50 transition-all duration-300 touch-manipulation"
+                style={{
+                  animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
+                }}
               >
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4" aria-hidden="true">
-                    <Icon className="w-6 h-6 text-primary" />
+                <CardHeader className="pb-3 md:pb-6">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 md:mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300" aria-hidden="true">
+                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl" role="heading" aria-level={3}>
+                  <CardTitle className="text-lg md:text-xl group-hover:text-primary transition-colors" role="heading" aria-level={3}>
                     {feature.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">
+                <CardContent className="pt-0">
+                  <CardDescription className="text-sm md:text-base">
                     {feature.description}
                   </CardDescription>
                 </CardContent>
