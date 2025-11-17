@@ -23,6 +23,10 @@
 # IDE folders
 .vscode/
 .idea/
+.kiro/
+
+# Other folders to ignore
+behavioral OS/
 
 # debug
 npm-debug.log*
