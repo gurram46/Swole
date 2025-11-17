@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Sparkles, Dumbbell, ShieldCheck, Building2, Check } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -94,7 +95,7 @@ export function Pricing() {
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {pricingTiers.map((tier) => {
             const Icon = tier.icon;
             return (
@@ -141,16 +142,39 @@ export function Pricing() {
                 </CardContent>
 
                 <CardFooter>
-                  <Button
-                    className="w-full"
-                    variant={tier.highlighted ? 'default' : 'outline'}
-                  >
-                    {tier.cta}
-                  </Button>
+                  {tier.name === 'Enterprise' ? (
+                    <a href="mailto:contact@quantumworks.services" className="w-full">
+                      <Button
+                        className="w-full"
+                        variant={tier.highlighted ? 'default' : 'outline'}
+                      >
+                        {tier.cta}
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link href="/signup" className="w-full">
+                      <Button
+                        className="w-full"
+                        variant={tier.highlighted ? 'default' : 'outline'}
+                      >
+                        {tier.cta}
+                      </Button>
+                    </Link>
+                  )}
                 </CardFooter>
               </Card>
             );
           })}
+        </div>
+
+        {/* Login Link for Existing Users */}
+        <div className="text-center mt-8">
+          <p className="text-sm text-muted-foreground">
+            Already have an account?{' '}
+            <Link href="/login" className="text-primary hover:underline font-medium">
+              Login here
+            </Link>
+          </p>
         </div>
       </div>
     </section>

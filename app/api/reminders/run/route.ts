@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
         // Send email via Resend
         const emailResult = await resend.emails.send({
-          from: 'Swole Gym <contact@quantumworks.services>',
+          from: 'Swole Gym <noreply@quantumworks.services>',
           to: gym.owner_email,
           subject: `⚠️ Membership Expiry Alert - ${gym.name}`,
           html: emailHtml,

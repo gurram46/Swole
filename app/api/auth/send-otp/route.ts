@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: 'Swole Auth <contact@quantumworks.services>',
+        from: 'Swole Gym <noreply@quantumworks.services>',
         to: normalizedEmail,
         subject: 'Your Swole Login Code',
         html: `

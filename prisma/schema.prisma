@@ -25,14 +25,13 @@ model Gym {
 }
 
 model AdminUser {
-  id          String    @id @default(uuid())
-  gym_id      String
-  gym         Gym       @relation(fields: [gym_id], references: [id])
-  email       String    @unique
-  otp_code    String?
-  otp_expires DateTime?
-  role        Role      @default(owner)
-  created_at  DateTime  @default(now())
+  id            String    @id @default(uuid())
+  gym_id        String
+  gym           Gym       @relation(fields: [gym_id], references: [id])
+  email         String    @unique
+  password_hash String
+  role          Role      @default(owner)
+  created_at    DateTime  @default(now())
 
   @@index([gym_id])
 }
@@ -83,4 +82,16 @@ model ReminderLog {
   created_at DateTime @default(now())
 
   @@index([run_at])
+}
+
+model SignupOTP {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  otp_code    String
+  otp_expires DateTime
+  verified    Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  @@index([email])
+  @@index([otp_expires])
 }

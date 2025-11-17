@@ -1,8 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export function Hero() {
+  const scrollToHowItWorks = () => {
+    const element = document.getElementById('how-it-works');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative w-full h-[85vh] flex items-center justify-center md:justify-start overflow-hidden bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20">
       {/* Dark overlay for readability */}
@@ -28,12 +36,19 @@ export function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button size="lg" className="text-base">
-            Start Free Trial
-          </Button>
-          <Button size="lg" variant="ghost" className="text-base">
+          <Link href="/signup">
+            <Button size="lg" className="text-base">
+              Start Free Trial
+            </Button>
+          </Link>
+          <Button size="lg" variant="ghost" className="text-base" onClick={scrollToHowItWorks}>
             See How It Works
           </Button>
+          <Link href="/login">
+            <Button size="lg" variant="outline" className="text-base">
+              Login
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
