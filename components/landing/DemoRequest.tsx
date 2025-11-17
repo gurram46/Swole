@@ -74,11 +74,11 @@ export function DemoRequest() {
   };
 
   return (
-    <section className="py-20 px-6 md:px-12 lg:px-16 bg-muted/30">
+    <section className="py-20 px-6 md:px-12 lg:px-16 bg-muted/30" aria-labelledby="demo-heading">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h2 id="demo-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Request a Free Live Demo
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
@@ -104,11 +104,11 @@ export function DemoRequest() {
           {/* Left: Form */}
           <Card className="border-border shadow-lg">
             <CardHeader>
-              <CardTitle>Get Started</CardTitle>
+              <CardTitle role="heading" aria-level={3}>Get Started</CardTitle>
               <CardDescription>Fill in your details and we'll reach out</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" aria-label="Demo request form">
                 <div>
                   <Label htmlFor="fullName">
                     Full Name <span className="text-destructive">*</span>
@@ -206,7 +206,7 @@ export function DemoRequest() {
           <div className="space-y-6">
             <Card className="border-border shadow-lg">
               <CardHeader>
-                <CardTitle>Prefer Talking Directly?</CardTitle>
+                <CardTitle role="heading" aria-level={3}>Prefer Talking Directly?</CardTitle>
                 <CardDescription>
                   Reach us on WhatsApp anytime.
                 </CardDescription>
@@ -217,8 +217,9 @@ export function DemoRequest() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors border border-primary/20"
+                  aria-label="Contact us on WhatsApp at +91 94916 28410"
                 >
-                  <MessageCircle className="w-6 h-6 text-primary" />
+                  <MessageCircle className="w-6 h-6 text-primary" aria-hidden="true" />
                   <div>
                     <div className="font-semibold">WhatsApp</div>
                     <div className="text-sm text-muted-foreground">
@@ -230,8 +231,9 @@ export function DemoRequest() {
                 <a
                   href="mailto:contact@quantumworks.services"
                   className="flex items-center gap-3 p-4 rounded-lg bg-secondary/10 hover:bg-secondary/20 transition-colors border border-secondary/20"
+                  aria-label="Email us at contact@quantumworks.services"
                 >
-                  <Mail className="w-6 h-6 text-secondary" />
+                  <Mail className="w-6 h-6 text-secondary" aria-hidden="true" />
                   <div>
                     <div className="font-semibold">Email</div>
                     <div className="text-sm text-muted-foreground">

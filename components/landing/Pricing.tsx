@@ -82,11 +82,11 @@ const pricingTiers = [
 
 export function Pricing() {
   return (
-    <section className="py-20 px-6 md:px-12 lg:px-16 bg-background">
+    <section className="py-20 px-6 md:px-12 lg:px-16 bg-background" aria-labelledby="pricing-heading">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h2 id="pricing-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Simple, Transparent Pricing
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
@@ -114,10 +114,12 @@ export function Pricing() {
                 )}
 
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4" aria-hidden="true">
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <CardTitle className="text-2xl">{tier.name}</CardTitle>
+                  <CardTitle className="text-2xl" role="heading" aria-level={3}>
+                    {tier.name}
+                  </CardTitle>
                   <CardDescription>{tier.description}</CardDescription>
                 </CardHeader>
 

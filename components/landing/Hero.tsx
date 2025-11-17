@@ -27,24 +27,30 @@ export function Hero() {
           </span>
           <br />
           <span className="text-foreground">
-            Gym Management Made Strong.
+            Gym Management Software for Indian Fitness Centers
           </span>
         </h1>
 
         <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
-          QR-based attendance, membership tracking, renewals, and reminders — built for Indian gyms that want to run smarter, not harder.
+          QR-based attendance, membership tracking, renewals, and automated reminders — built for Indian gyms that want to run smarter, not harder.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link href="/signup">
+          <Link href="/signup" aria-label="Start your free trial of Swole gym management software">
             <Button size="lg" className="text-base">
               Start Free Trial
             </Button>
           </Link>
-          <Button size="lg" variant="ghost" className="text-base" onClick={scrollToHowItWorks}>
+          <Button 
+            size="lg" 
+            variant="ghost" 
+            className="text-base" 
+            onClick={scrollToHowItWorks}
+            aria-label="Learn how Swole gym management software works"
+          >
             See How It Works
           </Button>
-          <Link href="/login">
+          <Link href="/login" aria-label="Login to your Swole gym management account">
             <Button size="lg" variant="outline" className="text-base">
               Login
             </Button>

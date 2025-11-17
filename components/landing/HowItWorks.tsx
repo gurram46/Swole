@@ -23,11 +23,11 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 px-6 md:px-12 lg:px-16 bg-muted/30">
+    <section id="how-it-works" className="py-20 px-6 md:px-12 lg:px-16 bg-muted/30" aria-labelledby="how-it-works-heading">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h2 id="how-it-works-heading" className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             How Swole Works
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
@@ -56,7 +56,7 @@ export function HowItWorks() {
 
                   {/* Icon Circle */}
                   <div className="ml-12 md:ml-0 mb-0 md:mb-6 flex-shrink-0">
-                    <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300">
+                    <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/20 transition-all duration-300" aria-hidden="true">
                       <Icon className="w-10 h-10 text-primary" />
                     </div>
                   </div>
@@ -64,7 +64,7 @@ export function HowItWorks() {
                   {/* Content */}
                   <div className="ml-6 md:ml-0">
                     {/* Step Number (Desktop) */}
-                    <div className="hidden md:block text-sm font-bold text-primary mb-2">
+                    <div className="hidden md:block text-sm font-bold text-primary mb-2" aria-label={`Step ${step.step}`}>
                       Step {step.step}
                     </div>
 

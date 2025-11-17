@@ -5,13 +5,34 @@ import { Pricing } from '@/components/landing/Pricing';
 import { DemoRequest } from '@/components/landing/DemoRequest';
 
 export default function MarketingPage() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Swole Gym Management Software',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: 'https://swole.in',
+    description: 'Gym management software with QR attendance, automated reminders, and membership tracking.',
+    offers: {
+      '@type': 'Offer',
+      price: '4999',
+      priceCurrency: 'INR',
+    },
+  };
+
   return (
-    <main>
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <Pricing />
-      <DemoRequest />
-    </main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <main>
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Pricing />
+        <DemoRequest />
+      </main>
+    </>
   );
 }
