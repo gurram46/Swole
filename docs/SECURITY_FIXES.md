@@ -100,6 +100,15 @@ checkRateLimit(`signup-otp:${clientIp}`, {
 });
 ```
 
+**IP Spoofing Protection:**
+```typescript
+// Uses LAST IP in x-forwarded-for chain (added by trusted proxy)
+// First IPs can be client-controlled and spoofed
+const forwarded = request.headers.get('x-forwarded-for');
+const ips = forwarded.split(',').map(ip => ip.trim());
+return ips[ips.length - 1]; // Trusted proxy IP
+```
+
 ---
 
 ### 4. ✅ Debug Information Exposure (INFO)
@@ -170,6 +179,49 @@ if (!adminUser) {
 
 ---
 
+### 7. ✅ IP Spoofing in Rate Limiter (CRITICAL - P1)
+
+**Issue:** Rate limiter used the FIRST IP in `x-forwarded-for` header, which can be spoofed by attackers.
+
+**Impact:** Attackers could bypass rate limiting by sending requests with fake `x-forwarded-for` headers, making each request appear to come from a different IP.
+
+**Fix:**
+- Modified `getClientIp()` to use the LAST IP in the `x-forwarded-for` chain
+- The last IP is added by the trusted proxy (Vercel/Next.js) and cannot be spoofed
+- Prioritizes `x-real-ip` header which is also set by trusted infrastructure
+- Follows OWASP rate limiting guidance for trusted IP extraction
+
+**Files Modified:**
+- `lib/rate-limit.ts`
+
+**Code Change:**
+```typescript
+// Before (VULNERABLE - uses first IP which can be spoofed)
+const forwarded = request.headers.get('x-forwarded-for');
+if (forwarded) {
+  return forwarded.split(',')[0].trim(); // ❌ Client-controlled
+}
+
+// After (SECURE - uses last IP from trusted proxy)
+const realIp = request.headers.get('x-real-ip');
+if (realIp) {
+  return realIp.trim(); // ✅ Set by trusted proxy
+}
+
+const forwarded = request.headers.get('x-forwarded-for');
+if (forwarded) {
+  const ips = forwarded.split(',').map(ip => ip.trim());
+  return ips[ips.length - 1]; // ✅ Last IP added by trusted proxy
+}
+```
+
+**Why This Matters:**
+- `x-forwarded-for: attacker-ip, real-ip` - First IP is attacker-controlled
+- Vercel/Next.js appends the real client IP to the END of the chain
+- Using the last IP ensures we're rate limiting the actual client, not a spoofed value
+
+---
+
 ## Security Best Practices Implemented
 
 ### Authentication
@@ -183,6 +235,7 @@ if (!adminUser) {
 - ✅ IP-based rate limiting on all auth endpoints
 - ✅ Automatic cleanup of expired rate limit entries
 - ✅ User-friendly error messages with retry timing
+- ✅ Trusted IP extraction (uses last IP in x-forwarded-for chain to prevent spoofing)
 
 ### Data Protection
 - ✅ OTP codes hashed with SHA-256 before storage

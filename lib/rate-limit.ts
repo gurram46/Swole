@@ -93,21 +93,33 @@ export function checkRateLimit(
 }
 
 /**
- * Get client IP address from request
+ * Get client IP address from request using trusted sources
+ * 
+ * SECURITY: Uses the LAST IP in x-forwarded-for chain, which is added by the
+ * trusted proxy (Vercel/Next.js edge). The first IPs can be spoofed by clients.
+ * 
  * @param request - Next.js request object
  * @returns IP address or 'unknown'
  */
 export function getClientIp(request: Request): string {
-  // Try to get IP from various headers (for proxies/load balancers)
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-
+  // For Vercel/Next.js deployments, use x-real-ip which is set by the trusted proxy
+  // This cannot be spoofed by the client
   const realIp = request.headers.get('x-real-ip');
   if (realIp) {
-    return realIp;
+    return realIp.trim();
   }
 
+  // If x-real-ip is not available, use the LAST IP in x-forwarded-for
+  // The last IP is added by the trusted proxy and cannot be spoofed
+  // Earlier IPs in the chain can be client-controlled
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    const ips = forwarded.split(',').map(ip => ip.trim());
+    // Use the last IP (added by trusted proxy)
+    return ips[ips.length - 1];
+  }
+
+  // Fallback to 'unknown' if no IP headers are present
+  // In production, this should rarely happen with proper proxy configuration
   return 'unknown';
 }
