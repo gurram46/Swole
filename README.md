@@ -134,6 +134,30 @@ The `vercel.json` file is already configured. Vercel Cron will automatically:
 
 ## 📁 Project Structure
 
+### Root Directory Files
+
+**Configuration Files (Required at Root):**
+- `package.json` - npm dependencies and scripts
+- `tsconfig.json` - TypeScript configuration
+- `tailwind.config.ts` - Tailwind CSS configuration
+- `next.config.mjs` - Next.js configuration
+- `postcss.config.mjs` - PostCSS configuration
+- `components.json` - shadcn/ui configuration
+- `components.config.json` - Component library settings
+- `prisma.config.ts` - Prisma configuration
+- `vercel.json` - Vercel deployment settings
+- `.gitignore` - Git ignore rules
+- `.env` - Environment variables (not in git)
+- `.env.example` - Environment template
+
+**Build/IDE Folders (Auto-generated, Ignored by Git):**
+- `.next/` - Next.js build output
+- `node_modules/` - npm dependencies
+- `.vscode/` - VS Code settings
+- `.kiro/` - Kiro IDE settings
+
+### Application Structure
+
 ```
 swole/
 ├── app/
