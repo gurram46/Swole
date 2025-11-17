@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { z } from 'zod';
 import crypto from 'crypto';
 
@@ -10,6 +11,24 @@ const verifyOtpSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 5 verification attempts per 15 minutes per IP
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(`verify-otp:${clientIp}`, {
+      maxRequests: 5,
+      windowMs: 15 * 60 * 1000, // 15 minutes
+    });
+
+    if (!rateLimit.success) {
+      const resetInMinutes = Math.ceil((rateLimit.resetAt - Date.now()) / 60000);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: `Too many verification attempts. Please try again in ${resetInMinutes} minute${resetInMinutes > 1 ? 's' : ''}.` 
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email, otp } = verifyOtpSchema.parse(body);
 

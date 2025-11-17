@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { Resend } from 'resend';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { z } from 'zod';
 import crypto from 'crypto';
 
@@ -12,26 +13,47 @@ const sendOtpSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 3 password reset requests per 15 minutes per IP
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(`forgot-password:${clientIp}`, {
+      maxRequests: 3,
+      windowMs: 15 * 60 * 1000, // 15 minutes
+    });
+
+    if (!rateLimit.success) {
+      const resetInMinutes = Math.ceil((rateLimit.resetAt - Date.now()) / 60000);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: `Too many password reset requests. Please try again in ${resetInMinutes} minute${resetInMinutes > 1 ? 's' : ''}.` 
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email } = sendOtpSchema.parse(body);
 
     const normalizedEmail = email.toLowerCase();
 
-    // Check if admin user exists
+    // Check if admin user exists (but don't reveal if they don't)
     const adminUser = await prisma.adminUser.findUnique({
       where: { email: normalizedEmail },
       select: { id: true, email: true },
     });
 
+    // Always return success to prevent user enumeration
+    // Only send email if user actually exists
     if (!adminUser) {
-      return NextResponse.json(
-        { success: false, error: 'No account found with this email address' },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: true,
+        message: 'If an account exists with this email, a password reset code has been sent',
+      });
     }
 
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate cryptographically secure 6-digit OTP
+    const otpBuffer = crypto.randomBytes(4);
+    const otp = (otpBuffer.readUInt32BE(0) % 900000 + 100000).toString();
     
     // Hash OTP for storage (SHA256)
     const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
@@ -98,7 +120,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'Password reset code sent to your email',
+        message: 'If an account exists with this email, a password reset code has been sent',
       });
     } catch (emailError) {
       console.error('Failed to send password reset email:', emailError);

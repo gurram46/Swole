@@ -1,9 +1,12 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET || 'fallback-secret-key-change-in-production'
-);
+// Ensure AUTH_SECRET is set in production
+if (!process.env.AUTH_SECRET) {
+  throw new Error('AUTH_SECRET environment variable is not set. Please configure it in your .env file.');
+}
+
+const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 
 const COOKIE_NAME = 'swole_session';
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds

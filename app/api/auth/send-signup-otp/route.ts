@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { Resend } from 'resend';
 import { generateSignupOtpEmail } from '@/lib/emails/signupOtp';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { z } from 'zod';
 import crypto from 'crypto';
 
@@ -13,6 +14,24 @@ const sendOtpSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 3 OTP requests per 15 minutes per IP
+    const clientIp = getClientIp(request);
+    const rateLimit = checkRateLimit(`signup-otp:${clientIp}`, {
+      maxRequests: 3,
+      windowMs: 15 * 60 * 1000, // 15 minutes
+    });
+
+    if (!rateLimit.success) {
+      const resetInMinutes = Math.ceil((rateLimit.resetAt - Date.now()) / 60000);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: `Too many OTP requests. Please try again in ${resetInMinutes} minute${resetInMinutes > 1 ? 's' : ''}.` 
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email } = sendOtpSchema.parse(body);
 
@@ -29,8 +48,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate cryptographically secure 6-digit OTP
+    const otpBuffer = crypto.randomBytes(4);
+    const otp = (otpBuffer.readUInt32BE(0) % 900000 + 100000).toString();
     
     // Hash OTP for storage (SHA256)
     const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
@@ -53,46 +73,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // DEBUG: Log environment variable status
-    console.log('[RESEND DEBUG] API Key exists:', !!process.env.RESEND_API_KEY);
-    console.log('[RESEND DEBUG] API Key length:', process.env.RESEND_API_KEY?.length || 0);
-    console.log('[RESEND DEBUG] API Key prefix:', process.env.RESEND_API_KEY?.substring(0, 5) || 'NONE');
-
     // Send OTP email
     const emailHtml = generateSignupOtpEmail({ otp, email });
     
     try {
-      console.log('[RESEND DEBUG] Attempting to send email to:', email);
-      console.log('[RESEND DEBUG] From address:', 'Swole Gym <noreply@quantumworks.services>');
-      
-      const result = await resend.emails.send({
+      await resend.emails.send({
         from: 'Swole Gym <noreply@quantumworks.services>',
         to: email,
         subject: '🔐 Your Swole Gym Verification Code',
         html: emailHtml,
       });
-      
-      console.log('[RESEND DEBUG] Send result:', JSON.stringify(result, null, 2));
-      console.log('[RESEND DEBUG] Email ID:', result.data?.id);
-      console.log('[RESEND DEBUG] Error:', result.error);
 
-      // Return detailed debug info in response
       return NextResponse.json({
         success: true,
         message: 'OTP sent successfully',
-        debug: {
-          apiKeyExists: !!process.env.RESEND_API_KEY,
-          apiKeyLength: process.env.RESEND_API_KEY?.length || 0,
-          apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 5) || 'NONE',
-          emailId: result.data?.id,
-          resendResult: result,
-          timestamp: new Date().toISOString(),
-        },
       });
     } catch (emailError) {
-      console.error('[RESEND DEBUG] Resend API error:', emailError);
-      console.error('[RESEND DEBUG] Error type:', emailError instanceof Error ? emailError.constructor.name : typeof emailError);
-      console.error('[RESEND DEBUG] Error message:', emailError instanceof Error ? emailError.message : String(emailError));
+      console.error('Failed to send OTP email:', emailError);
       
       // Delete the OTP record since email failed
       await prisma.signupOTP.deleteMany({
@@ -103,13 +100,6 @@ export async function POST(request: NextRequest) {
         { 
           success: false, 
           error: 'Failed to send OTP email. Please try again.',
-          debug: {
-            apiKeyExists: !!process.env.RESEND_API_KEY,
-            apiKeyLength: process.env.RESEND_API_KEY?.length || 0,
-            errorType: emailError instanceof Error ? emailError.constructor.name : typeof emailError,
-            errorMessage: emailError instanceof Error ? emailError.message : String(emailError),
-            timestamp: new Date().toISOString(),
-          },
         },
         { status: 500 }
       );
